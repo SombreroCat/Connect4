@@ -47,6 +47,8 @@ public class Connect4 extends JFrame implements Runnable {
     int piecesOnBoard;
     int playerOneScore;
     int playerTwoScore;
+    int ydelta;
+    int xdelta;
     
     static Connect4 frame1;
     public static void main(String[] args) {
@@ -71,8 +73,8 @@ public class Connect4 extends JFrame implements Runnable {
                     if (xpos < 0 || ypos < 0 || xpos > getWidth2() || ypos > getHeight2())
                         return;
 //Calculate the width and height of each board square.
-                    int ydelta = getHeight2()/numRows;
-                    int xdelta = getWidth2()/numColumns;
+                    ydelta = getHeight2()/numRows;
+                    xdelta = getWidth2()/numColumns;
                     currentColumn = xpos/xdelta;
 //                    int row = ypos/ydelta;
                     currentRow = numRows - 1;
@@ -235,13 +237,18 @@ public class Connect4 extends JFrame implements Runnable {
                 if (board[zrow][zcolumn] != null)
                 {
                     g.setColor(board[zrow][zcolumn].getColor());
-                    g.fillOval(getX(0)+zcolumn*getWidth2()/numColumns,
-                    getY(0)+zrow*getHeight2()/numRows,
-                    getWidth2()/numColumns,
-                    getHeight2()/numRows);
+                    int xpos[]={getX(0)+zcolumn*getWidth2()/numColumns,getX(0)+(zcolumn)*getWidth2()/numColumns,
+                                getX(0)+(zcolumn)*getWidth2()/numColumns+xdelta,getX(0)+zcolumn*getWidth2()/numColumns};
+                    int ypos[]={getY(0)+(zrow+1)*getHeight2()/numRows,getY(0)+(zrow+1)*getHeight2()/numRows-ydelta,
+                        getY(0)+(zrow+1)*getHeight2()/numRows,getY(0)+(zrow+1)*getHeight2()/numRows};
+                    g.fillPolygon(xpos,ypos,xpos.length);
+//                    g.fillOval(getX(0)+zcolumn*getWidth2()/numColumns,
+//                    getY(0)+zrow*getHeight2()/numRows,
+//                    getWidth2()/numColumns,
+//                    getHeight2()/numRows);
                     if(board[zrow][zcolumn].getColor()!=Color.PINK)
                     {
-                        g.setColor(Color.white);
+                        g.setColor(Color.gray);
                         g.setFont (new Font ("Monospaced", Font.PLAIN, 25));
                         g.drawString (""+ board[zrow][zcolumn].getValue(),(getX(0)+zcolumn*getWidth2()/numColumns)+25,(getY(0)+zrow*getHeight2()/numRows)+35);
                     }
@@ -272,6 +279,7 @@ public class Connect4 extends JFrame implements Runnable {
         g.drawString ("PlayerOne Score: " + playerOneScore, 30, 50);
         g.setFont (new Font ("Monospaced", Font.PLAIN, 15));
         g.drawString ("playerTwo Score: " + playerTwoScore, 350, 50);
+        
 
         gOld.drawImage(image, 0, 0, null);
     }
